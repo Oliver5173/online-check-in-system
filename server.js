@@ -5,8 +5,7 @@ var http = require('http'),
 	fs = require('fs');
 
 
-var mongo_url = 'mongodb://weixinw:gQq8wCx1@127.0.0.1:27017/cmpt218_weixinw?authSource=admin';
-//var mongo_url = 'mongodb://admin:123456@ds041643.mlab.com:41643/cmpt218';
+var mongo_url = 'mongodb://admin:123@ds119129.mlab.com:19129/test_db';
 
 
 var course_session,session = 0,courses = [];
@@ -94,13 +93,13 @@ app.post('/checkin',(req,res) =>{
 	if(course_session == checkin_string){
 		MongoClient.connect(mongo_url, function(err, db) {
 		    if (err) throw err;
-			var dbo = db.db("cmpt218_weixinw");
+			var dbo = db.db("test_db");
 			var ckin_obj = {"checkin_string" : checkin_string, 
 							"name" : name,
 							"userid" : userid,
 							"time":current_time,
 							"course_session" : session};
-			dbo.collection("a3").insertOne(ckin_obj, function(err, res) {
+			dbo.collection("check_in").insertOne(ckin_obj, function(err, res) {
 				if (err) throw err;
 				else{
 					console.log(checkin_string,name,userid,current_time,session);
@@ -118,8 +117,8 @@ app.post('/checkin',(req,res) =>{
 app.get('/stop' , (req,res) =>{
 	MongoClient.connect(mongo_url, function(err, db) {
 	    if (err) throw err;
-		var dbo = db.db("cmpt218_weixinw");
-		dbo.collection("a3").find({'course_session':session}).toArray((err,result) =>{
+		var dbo = db.db("test_db");
+		dbo.collection("check_in").find({'course_session':session}).toArray((err,result) =>{
 			if (err) {throw err;}
 			var table_html = '';
 			table_html = `<h1>${course_session} has ${result.length} attendees</h1><table><tr><th>Name</th><th>User ID</th><th>time</th></tr>`;
@@ -142,8 +141,8 @@ app.get('/stop' , (req,res) =>{
 app.get('/history', (req,res) =>{
 	MongoClient.connect(mongo_url, function(err, db){
 		if (err) throw err;
-		var dbo = db.db("cmpt218_weixinw");
-		dbo.collection("a3").find({}).toArray((err,result) =>{
+		var dbo = db.db("test_db");
+		dbo.collection("check_in").find({}).toArray((err,result) =>{
 			if (err) {throw err;}
 			if(session > 0){
 				var obj_ary = [];
