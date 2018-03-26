@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Check in system</title>
+</head>
+
+<style>
+	.login-container{
+		border: solid 1px grey;
+		border-radius: 25px;
+		padding: 25px;
+		width: fit-cotent;
+		width: -moz-fit-content;
+
+	}
+	.login-container input{
+		margin-bottom: 10px;
+	}
+	.centered{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+	}
+	.centered button{
+		position: relative;
+		left: 50%;
+		transform: translate(-50%);
+	}
+
+	nav{
+		background-color: #333;
+		width: 100%;
+	}
+	nav ul{
+		list-style-type: none;
+		overflow: hidden;
+	}
+	nav ul li{
+		float: left;
+	}
+
+	li a{
+		display: block;
+		color: white;
+		text-align: center;
+		padding: 14px 16px;
+		text-decoration: none;
+	}
+
+	li a:hover{
+		background-color: #111;
+	}
+
+	button{
+		padding: 10px;
+		margin-bottom: 5px;
+	}
+</style>
+
+<body>
+	<nav>
+		<ul>
+			<li><a href="http://www.cs.sfu.ca/CourseCentral/218/bobbyc/">ABOUT</a></li>
+			<li><a href="#student" onclick="checkin()">Student checkin</a></li>
+			<li><a href="#admin" onclick="login()">login</a></li>
+		</ul>
+	</nav>
+
+	<div id="ajax-container" class="centered">
+		<h1>Welcome to CHECK-IN SYSTEM</h1>
+		<button style="width: 50%;" onclick="login()">login</button><br>
+		<button style="width: 50%;" onclick="checkin()">Student check-in</button>
+	</div>
+</body>
+<script type="text/javascript">
+	var ajax_div = document.getElementById('ajax-container');
+	var ajaxGet = (url, callback) => {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET',url,true);
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4){
+				callback(xhr.responseText);
+			}
+		}
+		xhr.send();
+	};
+
+	var login = () => {ajaxGet('ajax/admin.txt',(resText) =>{
+		ajax_div.innerHTML = resText;
+	})};
+	var checkin = () => {ajaxGet('ajax/checkin.txt',(resText) =>{
+		ajax_div.innerHTML = resText;
+	})};
+</script>
+</html>

@@ -1,0 +1,10 @@
+<form action="/" method="POST">
+	<div class="login-container">
+		<h3>ADMIN LOGIN</h3>
+		<label for="username">USERNAME</label><br>
+		<input type="text" name="username"><br>
+		<label for="pwd">PASSWORD</label><br>
+		<input type="password" name="pwd"><br>
+		<input type="submit" value="LOGIN"><br>
+	</div>
+</form>

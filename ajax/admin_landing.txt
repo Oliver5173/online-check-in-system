@@ -1,0 +1,9 @@
+<div class="login-container">
+			<h3>ADMING LANDING</h3>
+			<form id="course_session" action="/" method="POST" >
+				<label for="ckin_string">CHECK-IN ID</label><br>
+				<input id="ckin_string" type="text" name="ckin_string" required=""><br>
+			</form>
+			<button onclick="startSession()">START CHECK-IN</button>
+			<button onclick="check_history()">VIEW HISTORY</button>
+		</div>

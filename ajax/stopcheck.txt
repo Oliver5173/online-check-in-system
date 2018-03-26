@@ -1,0 +1,5 @@
+<div class="login-container">
+	<h2>Please check-in now!</h2>
+	<h5 id="check-id">CHECK-IN ID:</h5>
+	<button id="stop" onclick="stop()"></button>
+</div>

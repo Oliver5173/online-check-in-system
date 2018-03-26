@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Check in system</title>
+</head>
+
+<style>
+	.login-container{
+		border: solid 1px grey;
+		border-radius: 25px;
+		padding: 25px;
+		width: fit-cotent;
+		width: -moz-fit-content;
+
+	}
+	.login-container input{
+		margin-bottom: 10px;
+	}
+	.centered{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%,-50%);
+	}
+
+	nav{
+		background-color: #333;
+		width: 100%;
+	}
+	nav ul{
+		list-style-type: none;
+		overflow: hidden;
+	}
+	nav ul li{
+		float: left;
+	}
+
+	li a{
+		display: block;
+		color: white;
+		text-align: center;
+		padding: 14px 16px;
+		text-decoration: none;
+	}
+
+	li a:hover{
+		background-color: #111;
+	}
+
+	button{
+		padding: 10px;
+		margin-bottom: 5px;
+	}
+	ul h2{
+		position: absolute;
+	    right: 10%;
+	    color: white;
+	    padding-bottom: 16px;
+	}
+	table {
+   		border-collapse: collapse;
+	}
+
+	table, td, th {
+    	border: 1px solid black;
+	}
+</style>
+
+<body>
+	<nav>
+		<ul>
+			<li><a href="http://www.cs.sfu.ca/CourseCentral/218/bobbyc/">ABOUT</a></li>
+			<li><a href="#student" onclick="checkin()">Student checkin</a></li>
+			<li><a href="#admin" onclick="landing()">Admin Landing</a></li>
+			<li><a href='/'>Logout</a></li>
+			<h2>Welcome back,admin</h2>
+		</ul>
+		
+	</nav>
+
+	<div id="ajax-container" class="centered">
+		<div class="login-container">
+			<h3>ADMING LANDING</h3>
+			<form id="course_session" action="/" method="POST" >
+				<label for="ckin_string">CHECK-IN ID</label><br>
+				<input id="ckin_string" type="text" name="ckin_string" required=""><br>
+			</form>
+			<button onclick="startSession()">START CHECK-IN</button>
+			<button onclick="check_history()">VIEW HISTORY</button>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var ajax_div = document.getElementById('ajax-container');
+	var course;
+	var flag = true;
+
+	var ajaxGet = (url, callback) => {
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET',url,true);
+		xhr.onreadystatechange = function(){
+			if(xhr.readyState === 4){
+				callback(xhr.responseText);
+			}
+		}
+		xhr.send();
+	};
+
+	var landing = () => {
+		ajaxGet('/course_session' , (resText) =>{
+			if(resText){
+				course = resText;
+				flag = false;
+			}
+		});
+		ajaxGet('ajax/admin_landing.txt',(resText) =>{
+			ajax_div.innerHTML = resText;
+			if(flag == false){
+				document.getElementById('check-id').innerText = 'CHECK-IN ID: ' + course;
+				document.getElementById('stop').innerText = 'STOP ' + course + ' CHECK-IN';
+			}
+		});
+	};
+	var checkin = () => {ajaxGet('ajax/checkin.txt',(resText) =>{
+		ajax_div.innerHTML = resText;
+	})};
+
+	var startSession = () => {
+		document.getElementById('course_session').submit();
+		ajaxGet('/course_session',(res_course)=>{
+			if(res_course) flag = false;
+			else flag = true;
+			ajaxGet('ajax/stopcheck.txt',(resText) =>{
+				if(flag){
+					course = document.getElementById('ckin_string').value;
+					flag = false;
+				}
+				ajax_div.innerHTML = resText;
+				document.getElementById('check-id').innerText = 'CHECK-IN ID: ' + course;
+				document.getElementById('stop').innerText = 'STOP ' + course + ' CHECK-IN';
+			});
+		});
+	};
+	var stop = () =>{
+		var xhr = new XMLHttpRequest();
+		ajaxGet('/stop',(resText) =>{
+			ajax_div.innerHTML = resText;
+		});
+	};
+
+	var check_history = function(){
+		ajaxGet('/history',(resText)=>{
+			ajax_div.innerHTML = resText;
+		});
+	};
+
+	ajaxGet('/course_session' , (res_course) =>{
+		if(res_course){
+			course = res_course;
+			flag = false;
+			ajaxGet('ajax/stopcheck.txt',(resText) =>{
+				ajax_div.innerHTML = resText;
+				document.getElementById('check-id').innerText = 'CHECK-IN ID: ' + course;
+				document.getElementById('stop').innerText = 'STOP ' + course + ' CHECK-IN';
+			});
+		}
+	});
+</script>
+</html>

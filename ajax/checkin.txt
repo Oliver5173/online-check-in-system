@@ -1,0 +1,12 @@
+<form action="/checkin" method="POST">
+	<div class="login-container">
+		<h3>CHECK-IN</h3>
+		<label for="ckin_string">CHECK-IN STRING</label><br>
+		<input type="text" name="ckin_string" required><br>
+		<label for="name">NAME</label><br>
+		<input type="text" name="name" required=""><br>
+		<label for="userid">USER ID</label><br>
+		<input type="text" name="userid" required=""><br>
+		<input type="submit" value="CHECK-IN"><br>
+	</div>
+</form>
